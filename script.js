@@ -1,13 +1,24 @@
-const firstbox = document.getElementById("1");
-const firstbox = document.getElementById("2");
-const firstbox = document.getElementById("3");
-const firstbox = document.getElementById("4");
-const firstbox = document.getElementById("5");
-const firstbox = document.getElementById("6");
-const firstbox = document.getElementById("7");
-const firstbox = document.getElementById("8");
-const firstbox = document.getElementById("9");
+const gameboard = document.getElementById("board")
+console.log(gameboard)
+let currentPlayersTurn = 'X'
 
-firstbox.addEventListener('click',function(){
-alert("Hi this suare is clicked")
-})
+function changeTurn(){
+    if(currentPlayersTurn==='X'){
+        currentPlayersTurn = 'O'
+    } else {
+        currentPlayersTurn = 'X'
+    }
+}
+
+function fillCell(e){
+    let clickedCell = e.target
+    // if cell is empty
+    if(!clickedCell.innerText){
+        // then add an x
+        clickedCell.innerText = currentPlayersTurn
+        changeTurn()
+    }
+}
+
+gameboard.addEventListener("click", fillCell)
+

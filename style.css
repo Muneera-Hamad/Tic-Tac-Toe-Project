@@ -1,46 +1,38 @@
-
-
-h1{
-    text-align: center;
-}
-ando
-hr{
-    background-color: black;
-    text-align: center;
+*{
+    box-sizing: border-box;
 }
 
-.gameboard {
-    background-color: yellow;
-    width: 300px;
-    margin: 0 auto;
+:root{
+    --cell-size: 100px;
+    --mark-size: cal(var(--cell-size)*.9)
+
 }
 
-.row1, .row2, .row3 {
+body{
+    margin: 0;
+}
+
+.board{
+    width: 100vh;
+    height: 100vw;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    justify-items: center;
+    align-items: center;
+    grid-template-columns: repeat(3, auto);
+}
+
+.cell{
+    width: var(--cell-size);
+    height: var(--cell-size);
     
-    height: 100px;
-    width: 300px;
-    display: flex;
+    border: 1px solid black; 
 }
 
-.row1 div {
-    border: 2px solid green;
-    height: 100%;
-    width: 33%
-}
+.cell:first-child,
+.cell:nth-child(2)
+.cell:nth-child(3) {
 
-
-.row2 div {
-    border: 2px solid green;
-    height: 100%;
-    width: 33%
-}
-
-.row3 div {
-    border: 2px solid green;
-    height: 100%;
-    width: 33%
-}
-
-.cell1{
-    ba
+    border-top: none; 
 }
