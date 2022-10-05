@@ -13,8 +13,8 @@ body{
 }
 
 .board{
-    width: 100vh;
-    height: 100vw;
+    width: 50vw;
+    height: 50vh;
     display: grid;
     justify-content: center;
     align-content: center;
@@ -26,7 +26,6 @@ body{
 .cell{
     width: var(--cell-size);
     height: var(--cell-size);
-    
     border: 1px solid black; 
 }
 
@@ -34,5 +33,9 @@ body{
 .cell:nth-child(2)
 .cell:nth-child(3) {
 
-    border-top: none; 
+    /* border-top: none;  */
+}
+
+#player {
+    color: black;
 }
