@@ -1,96 +1,70 @@
-const gameboard = document.getElementById("board")
-let currentPlayersTurn = 'X'
-// Store our HTML restart button in a variable
-let restartButton = document.querySelector('#restartButton')
-//Store our HTML div list for the squares in a variable array
-let cellsArray = document.querySelectorAll('.cell')
-let cell0 = document.getElementById('0')
-let cell1 = document.getElementById('1')
-let cell2 = document.getElementById('2')
-let cell3 = document.getElementById('3')
-let cell4 = document.getElementById('4')
-let cell5 = document.getElementById('5')
-let cell6 = document.getElementById('6')
-let cell7 = document.getElementById('7')
-let cell8 = document.getElementById('8')
-
-function checkWinner(){
-    if (cell0.innerText == 'X' && cell1.innerText == 'X' && cell2.innerText == 'X') {
-        console.log('player X wins!!!')
-    } else if (cell3.innerText == 'X' && cell4.innerText == 'X' && cell5.innerText == 'X'){}
-    else if (cell6.innerText == 'X' && cell7.innerText == 'X' && cell8.innerText == 'X'){}
-    else if (cell0.innerText == 'X' && cell3.innerText == 'X' && cell6.innerText == 'X'){}
-    else if (cell1.innerText == 'X' && cell4.innerText == 'X' && cell7.innerText == 'X'){}
-    else if (cell2.innerText == 'X' && cell5.innerText == 'X' && cell8.innerText == 'X'){}
-    else if (cell0.innerText == 'X' && cell4.innerText == 'X' && cell8.innerText == 'X'){}
-    else if (cell2.innerText == 'X' && cell4.innerText == 'X' && cell6.innerText == 'X'){}
+const gameState = {
+  rounds: [], // 0: draw, 1: winner (player 1), 2: winner (player 2)
+  turn: 1,
+  board: [null, null, null, null, null, null, null, null, null],
+  isCompleteRound: false
 }
-
-
-
-let winningArrays = [
-    [0,1,2],
-    [3,4,5],
-    [6,7,8],
-    [0,3,6],
-    [1,4,7],
-    [2,5,8],
-    [0,4,8],
-    [2,4,6]
+const winningPatterns = [ 
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6]
 ]
-
-
-gameboard.addEventListener("click", fillCell)
-restartButton.addEventListener('click', reset)
-
-function reset(){
-    console.log('restart button clicked!')
-    console.log(cellsArray)
-    //we apply an array iterator method 'forEach' to make each element have an innerText = '' to empty the previous X and O
-    cellsArray.forEach(cell => cell.innerText = '')
-}
-
-console.log(gameboard)
-
-function changeTurn(){
-    if(currentPlayersTurn==='X'){
-        currentPlayersTurn = 'O'
-        document.getElementById("player").innerText = 'player 1 turn';
-    } else {
-        currentPlayersTurn = 'X'
-        document.getElementById("player").innerText = 'player 2 turn';
+function isAWin(mark) {
+  let count = 0;
+  for (let pattern of winningPatterns) {
+    count = 0;
+    for (let position of pattern) {
+      if (gameState.board[position] == mark) {
+        count++;
+      }
     }
-    checkWinner()
-
-    // show current player on the dom
-    //#1 select the player div from the dom
-    //#2 add innerText to the player div
-    // eg: `${currenPlayersTurn}'s Turn`
-}
-
-function fillCell(e){   
-    let clickedCell = e.target
-    // if cell is empty
-    if(!clickedCell.innerText){
-        // then add an x
-        clickedCell.innerText = currentPlayersTurn
-        changeTurn()
+    if (count == 3) {
+      return true;
     }
-    event.target.remove 
+  }
+  return false;
 }
-
-
-
-
-
-// 0 1 2
-// 3 4 5
-// 6 7 8
-
-
-
-
-
-
-
-
+function showResult() {
+  let player1Result = gameState.rounds.filter(r => r == 1).length;
+  let player2Result = gameState.rounds.filter(r => r == 2).length;
+  document.querySelector("#player1").innerHTML = player1Result;
+  document.querySelector("#player2").innerHTML = player2Result;
+}
+function makeAMove(i) {
+  if (gameState.isCompleteRound) {
+    gameState.isCompleteRound = false;
+    gameState.turn = 1;
+    gameState.board = [null, null, null, null, null, null, null, null, null];
+    document.querySelectorAll(".square").forEach(el => el.innerHTML = "");
+    document.querySelector("#game-round").innerHTML = gameState.rounds.length+1;
+  } else {
+    if (gameState.board[i] == null) {
+      let mark = ((gameState.rounds.length + gameState.turn) % 2) == 0 ? "o" : "x";
+      document.querySelector("#player-turn").innerHTML = mark == "x" ? "o" : "x";
+      gameState.board[i] = mark;
+      document.querySelectorAll(".square")[i].innerHTML = mark;
+      if (isAWin(mark)) {
+        gameState.isCompleteRound = true;
+        let winner = mark == "x" ? 1 : 2;
+        gameState.rounds.push(winner);
+        setTimeout(function () {
+          alert("Player " + mark + " wins!");
+        }, 100);
+        showResult();
+      } else if (gameState.board.filter(s => s == null).length == 0) {
+        gameState.isCompleteRound = true;
+        gameState.rounds.push(0)
+        setTimeout(function () {
+          alert("Draw game!");
+        }, 100);  
+        showResult();
+      }
+      gameState.turn++;
+    }
+  }
+}
